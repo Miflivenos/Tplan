@@ -5,8 +5,8 @@ import tasksService from "../services/tasks.service";
 
 const useGetAllTasks = () => {
 
-    const[loading, setLoading] = useState(true);
-    const[tasks, setTasks] = useState<TaskType[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [tasks, setTasks] = useState<TaskType[]>([]);
     const { error, fatalError, handleErrors, resetErrors } = useManageErrors();
 
     const getTasks = useCallback(async() => {
@@ -15,9 +15,10 @@ const useGetAllTasks = () => {
         resetErrors();
 
         try {
-
-            const data = await tasksService.getAll();
-            setTasks(data.data.items);
+            // Truco seguro para TypeScript: pasamos por 'unknown' primero para evitar conflictos
+            const result = await tasksService.getAll();
+            const payload = result as unknown as { data: { items: TaskType[] } };
+            setTasks(payload.data.items);
 
         } catch(err) {
             handleErrors(err);
@@ -25,7 +26,7 @@ const useGetAllTasks = () => {
             setLoading(false);
         }
 
-    },[handleErrors, resetErrors]);
+    }, [handleErrors, resetErrors]);
 
     useEffect(() => {
 
@@ -39,7 +40,7 @@ const useGetAllTasks = () => {
 
         return () => { cancelado = true }
 
-    },[getTasks]);
+    }, [getTasks]);
 
     return { tasks, loading, error, fatalError, getTasks };
 
