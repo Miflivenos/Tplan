@@ -1,69 +1,25 @@
-import type { Request, Response } from "express"
-import tasksService from "../services/tasks.service.js"
-import getUserId from "../utils/getUserId.js";
+// Ejemplo completo de la estructura que debe tener tasks.service.ts
 
-const tasksController = {
-
-    async register(req: Request, res: Response){
-
-        const userId = getUserId(req.userId);
-
-        const task = await tasksService.create(req.body, userId);
-
-        res.status(201).json({
-            ok: true,
-            task
-        });
-
+const tasksService = {
+    async create(body: any, userId: any) {
+        // Tu lógica de creación aquí usando userId y body
     },
 
-    async getAll(req: Request, res: Response){
-
-        const userId = getUserId(req.userId);
-
-        const tasks = await tasksService.getAll(userId);
-
-        res.status(200).json({
-            ok: true,
-            data: { items: tasks }
-        });
-
+    async getAll(userId: any) {
+        // Tu lógica para obtener todas las tareas del usuario
     },
 
-    async editContent(req: Request, res: Response){
-
-        const userId = getUserId(req.userId);
-
-        await tasksService.updateContent(req.body, userId);
-
-        res.status(200).json({
-            ok: true
-        });
-
+    async updateContent(body: any, userId: any) {
+        // Tu lógica para actualizar contenido usando userId y body
     },
 
-    async delete(req: Request, res: Response){
-
-        const userId = getUserId(req.userId);
-
-        await tasksService.delete(Number(req.params.id), userId);
-
-        res.status(200).json({
-            ok: true
-        });
+    async delete(taskId: number, userId: any) {
+        // Tu lógica para eliminar la tarea del usuario
     },
 
-    async changeEstado(req: Request, res: Response){
-
-        const userId = getUserId(req.userId);
-
-        await tasksService.updateEstado(req.body.id, userId, req.body.estado);
-
-        res.status(200).json({
-            ok: true
-        });
+    async updateEstado(taskId: number, userId: any, estado: any) {
+        // Tu lógica para actualizar el estado usando taskId, userId y estado
     }
-
 };
 
-export default tasksController;
+export default tasksService;
